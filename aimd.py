@@ -73,7 +73,7 @@ class Aimd:
 		"""
 		self.df[col_to_move+'_m'] = self.df[col_to_move].rolling(window).mean()
     
-	def plot_moving_avg_T_and_E(self, window: int = 500) -> None:
+	def plot_moving_avg_T_and_E(self, window: int = 500, ext_out: str = "pdf") -> None:
 		"""
 		Plots the values of Temperature and Kohn-Shan energy
 		gven by the calculation and it respective SMA.
@@ -81,23 +81,18 @@ class Aimd:
         
 		# SMA computing
 		self.moving_avg('T', window)
-		# self.moving_avg('dE_KS', window)
 		self.moving_avg('dFreeE', window)
         
-		# figure parameters
-		# fig = plt.figure(figsize = [10*(1/2.54), 8*(1/2.54)])        
-		matplotlib.use('pgf')
+		if ext_out == 'pgf':
+			matplotlib.use('pgf')
+		
+		# figure parameters	
 		plt.rcParams.update({
 		    "font.family": "serif",  # use serif/main font for text elements
 		    "text.usetex": True,     # use inline math for ticks
 		    "pgf.rcfonts": False,    # don't setup fonts from rc parameters
 		    "font.size" : 12,
 			"figure.figsize" : [10*(1/2.54), 8*(1/2.54)]
-		    # "pgf.preamble": "\n".join([
-				# r"\usepackage{url}",            # load additional packages
-				# r"\usepackage{unicode-math}",   # unicode math setup
-				# r"\setmainfont{Times}",  # serif font via preamble
-	    	# ])
 		})
 		plt.tight_layout()
 
@@ -129,4 +124,4 @@ class Aimd:
 		plt.xlabel("Time (ps)")
 		plt.subplots_adjust(hspace = 0)
 		# fig.align_ylabels([ax1,ax2])
-		plt.savefig(f'aimd_{self.system_name}.pgf',bbox_inches = "tight")
+		plt.savefig(f'aimd_{self.system_name}.{ext_out}',bbox_inches = "tight")
